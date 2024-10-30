@@ -20,7 +20,7 @@ And the following record types:
 
 ```hcl
 module "example-com-a" {
-  source = "https://github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_a"
+  source = "github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_a"
 
   ip_addresses       = ["12.13.14.15", "13.14.15.16"]
   domain             = "www.example.com"
@@ -38,7 +38,7 @@ module "example-com-a" {
 
 ```hcl
 module "example-com-txt" {
-  source = "https://github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_txt"
+  source = "github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_txt"
 
   domain             = "my-txt-domain.example.com"
   value              = "value without quotes"
@@ -56,7 +56,7 @@ module "example-com-txt" {
 
 ```hcl
 module "example-com-mx" {
-  source = "https://github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_mx"
+  source = "github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_mx"
 
   domain             = "example.com"
   priority           = 10
@@ -75,7 +75,7 @@ module "example-com-mx" {
 
 ```hcl
 module "example-com-srv" {
-  source = "https://github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_srv"
+  source = "github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_srv"
 
   service            = "_caldavs"
   proto              = "_tcp"
@@ -97,7 +97,7 @@ module "example-com-srv" {
 
 ```hcl
 module "example-com-cname" {
-  source = "https://github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_cname"
+  source = "github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_cname"
 
   domain             = "subdomain.example.com"
   value              = "my-cname-server"
