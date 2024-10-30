@@ -110,3 +110,7 @@ module "example-com-cname" {
   ovh_enabled        = true
 }
 ```
+
+## License
+
+The source code is released under the Apache 2.0 license.
