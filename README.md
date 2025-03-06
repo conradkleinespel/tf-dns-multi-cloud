@@ -9,6 +9,7 @@ The modules support the following providers:
 
 And the following record types:
 - A;
+- AAAA;
 - CNAME;
 - MX;
 - SRV;
@@ -23,6 +24,24 @@ module "example-com-a" {
   source = "github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_a"
 
   ip_addresses       = ["12.13.14.15", "13.14.15.16"]
+  domain             = "www.example.com"
+  dns_zone_domain    = "example.com"
+
+  cloudflare_zone_id = cloudflare_zone.conradk_com.id
+
+  cloudflare_enabled = true
+  scaleway_enabled   = true
+  ovh_enabled        = true
+}
+```
+
+### AAAA record
+
+```hcl
+module "example-com-aaaa" {
+  source = "github.com/conradkleinespel/tf-dns-multi-cloud//dns/record_aaaa"
+
+  ip_addresses       = ["::1"]
   domain             = "www.example.com"
   dns_zone_domain    = "example.com"
 
