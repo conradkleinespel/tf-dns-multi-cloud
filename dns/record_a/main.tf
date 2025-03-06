@@ -3,6 +3,14 @@ locals {
   subdomain                         = replace(var.domain, "/(^|\\.)${local.dns_zone_domain_with_dots_escaped}$/", "")
 }
 
+resource "null_resource" "validate_domain" {
+  count = substr(var.domain, length(var.domain) - length(var.dns_zone_domain), length(var.dns_zone_domain)) == var.dns_zone_domain ? 0 : 1
+
+  provisioner "local-exec" {
+    command = "echo 'Error: The domain must end with the dns_zone_domain.' && exit 1"
+  }
+}
+
 resource "cloudflare_record" "a" {
   for_each = toset(var.cloudflare_enabled ? var.ip_addresses : [])
 
