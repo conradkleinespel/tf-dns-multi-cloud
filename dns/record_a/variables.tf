@@ -12,6 +12,7 @@ variable "ip_addresses" {
 
 variable "cloudflare_zone_id" {
   type = string
+  default = ""
 }
 
 variable "cloudflare_enabled" {

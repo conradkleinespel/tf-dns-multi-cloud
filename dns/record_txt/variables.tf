@@ -12,6 +12,7 @@ variable "dns_zone_domain" {
 
 variable "cloudflare_zone_id" {
   type = string
+  default = ""
 }
 
 variable "cloudflare_enabled" {
