@@ -1,8 +1,3 @@
-locals {
-  dns_zone_domain_with_dots_escaped = replace(var.dns_zone_domain, ".", "\\.")
-  subdomain                         = replace(var.domain, "/(^|\\.)${local.dns_zone_domain_with_dots_escaped}$/", "")
-}
-
 resource "null_resource" "validate_domain" {
   count = substr(var.domain, length(var.domain) - length(var.dns_zone_domain), length(var.dns_zone_domain)) == var.dns_zone_domain ? 0 : 1
 
@@ -11,33 +6,29 @@ resource "null_resource" "validate_domain" {
   }
 }
 
-resource "cloudflare_record" "a" {
-  for_each = toset(var.cloudflare_enabled ? var.ip_addresses : [])
+module "cloudflare_record" {
+  source = "./provider_cloudflare"
+  count = var.cloudflare_enabled ? 1 : 0
 
-  name    = var.domain
-  proxied = false
-  ttl     = 60
-  type    = "A"
-  value   = each.value
-  zone_id = var.cloudflare_zone_id
+  cloudflare_zone_id = var.cloudflare_zone_id
+  domain = var.domain
+  ip_addresses = var.ip_addresses
 }
 
-resource "scaleway_domain_record" "a" {
-  for_each = toset(var.scaleway_enabled ? var.ip_addresses : [])
+module "scaleway_domain_record" {
+  source = "./provider_scaleway"
+  count = var.scaleway_enabled ? 1 : 0
 
-  dns_zone = var.dns_zone_domain
-  name     = local.subdomain
-  type     = "A"
-  data     = each.value
-  ttl      = 60
+  dns_zone_domain = var.dns_zone_domain
+  domain = var.domain
+  ip_addresses = var.ip_addresses
 }
 
-resource "ovh_domain_zone_record" "a" {
-  for_each = toset(var.ovh_enabled ? var.ip_addresses : [])
+module "ovh_domain_zone_record" {
+  source = "./provider_ovh"
+  count = var.ovh_enabled ? 1 : 0
 
-  zone      = var.dns_zone_domain
-  subdomain = local.subdomain
-  fieldtype = "A"
-  ttl       = 60
-  target    = each.value
+  dns_zone_domain = var.dns_zone_domain
+  domain = var.domain
+  ip_addresses = var.ip_addresses
 }

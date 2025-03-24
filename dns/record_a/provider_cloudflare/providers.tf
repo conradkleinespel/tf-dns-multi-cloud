@@ -3,13 +3,5 @@ terraform {
     cloudflare = {
       source = "cloudflare/cloudflare"
     }
-
-    scaleway = {
-      source = "scaleway/scaleway"
-    }
-
-    ovh = {
-      source = "ovh/ovh"
-    }
   }
 }

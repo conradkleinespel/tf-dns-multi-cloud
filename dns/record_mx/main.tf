@@ -1,37 +1,29 @@
-locals {
-  dns_zone_domain_with_dots_escaped = replace(var.dns_zone_domain, "/\\./", "\\.")
-  subdomain                         = replace(var.domain, "/(^|\\.)${local.dns_zone_domain_with_dots_escaped}$/", "")
+module "cloudflare_record" {
+  source = "./provider_cloudflare"
+  count  = var.cloudflare_enabled ? 1 : 0
+
+  cloudflare_zone_id = var.cloudflare_zone_id
+  domain             = var.domain
+  priority           = var.priority
+  server             = var.server
 }
 
-resource "cloudflare_record" "mx" {
-  count = var.cloudflare_enabled ? 1 : 0
+module "scaleway_domain_record" {
+  source = "./provider_scaleway"
+  count  = var.scaleway_enabled ? 1 : 0
 
-  name     = var.domain
-  priority = var.priority
-  proxied  = false
-  ttl      = 60
-  type     = "MX"
-  value    = var.server
-  zone_id  = var.cloudflare_zone_id
+  dns_zone_domain = var.dns_zone_domain
+  domain          = var.domain
+  priority        = var.priority
+  server          = var.server
 }
 
-resource "scaleway_domain_record" "mx" {
-  count = var.scaleway_enabled ? 1 : 0
+module "ovh_domain_zone_record" {
+  source = "./provider_ovh"
+  count  = var.ovh_enabled ? 1 : 0
 
-  dns_zone = var.dns_zone_domain
-  name     = local.subdomain
-  type     = "MX"
-  data     = "${var.server}."
-  ttl      = 60
-  priority = var.priority
-}
-
-resource "ovh_domain_zone_record" "mx" {
-  count = var.ovh_enabled ? 1 : 0
-
-  zone      = var.dns_zone_domain
-  subdomain = local.subdomain
-  fieldtype = "MX"
-  ttl       = 60
-  target    = "${var.priority} ${var.server}."
+  dns_zone_domain = var.dns_zone_domain
+  domain          = var.domain
+  priority        = var.priority
+  server          = var.server
 }
